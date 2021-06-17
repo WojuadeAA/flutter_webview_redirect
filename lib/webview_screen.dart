@@ -25,65 +25,66 @@ class WebViewExampleState extends State<WebViewExample> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("WebView Page"),
-            automaticallyImplyLeading: false,
-          ),
-          body: Column(
-            children: [
-              Flexible(
-                  flex: 1,
-                  child: Container(
-                    child: LinearProgressIndicator(
-                      value: _progress,
-                    ),
-                  )),
-              Expanded(
-                flex: 10,
-                child: WebView(
-                  initialUrl: '1app.com.ng',
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onProgress: (int progress) {
-                    final progressIndouble = double.parse(progress.toString());
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("WebView Page"),
+          automaticallyImplyLeading: false,
+        ),
+        body: Column(
+          children: [
+            Flexible(
+                flex: 1,
+                child: Container(
+                  child: LinearProgressIndicator(
+                    value: _progress,
+                  ),
+                )),
+            Expanded(
+              flex: 10,
+              child: WebView(
+                initialUrl: '1app.com.ng',
+                javascriptMode: JavascriptMode.unrestricted,
+                onProgress: (int progress) {
+                  final progressIndouble = double.parse(progress.toString());
 
-                    setState(() {
-                      _progress = progressIndouble / 100;
-                    });
+                  setState(() {
+                    _progress = progressIndouble / 100;
+                  });
 
-                    print("WebView is loading (progress : $progress%)");
-                  },
-                  navigationDelegate: (NavigationRequest request) {
-                    //the logic to redirect can be here to
+                  print("WebView is loading (progress : $progress%)");
+                },
+                navigationDelegate: (NavigationRequest request) {
+                  //the logic to redirect can be here to
 
-                    if (request.url.contains("/login")) {
-                      print('blocking navigation to $request}');
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      }
+                  if (request.url.contains("/login")) {
+                    print('blocking navigation to $request}');
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
                     }
+                  }
 
-                    return NavigationDecision.navigate;
-                  },
-                  onPageStarted: (String url) {
-                    // https://accounts.1app.online/login
-                    print('Page started loading: $url');
+                  return NavigationDecision.navigate;
+                },
+                onPageStarted: (String url) {
+                  // https://accounts.1app.online/login
+                  print('Page started loading: $url');
 
 //it can also be here to
-                    if (url.contains("/login")) {
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      }
+                  if (url.contains("/login")) {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
                     }
-                  },
-                  onPageFinished: (String url) {
-                    print('Page finished loading: $url');
-                  },
-                ),
+                  }
+                },
+                onPageFinished: (String url) {
+                  print('Page finished loading: $url');
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        onWillPop: () async => false);
+      ),
+      onWillPop: () async => false,
+    );
   }
 }
